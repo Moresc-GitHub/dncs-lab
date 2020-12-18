@@ -7,7 +7,7 @@
 # you're doing.
 Vagrant.configure("2") do |config|
   config.vm.box_check_update = false
-  config.vm.boot_timeout=500
+  config.vm.boot_timeout=700
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--usb", "on"]
     vb.customize ["modifyvm", :id, "--usbehci", "off"]
@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
     router1.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-1", auto_config: false
     router1.vm.network "private_network", virtualbox__intnet: "broadcast_router-inter", auto_config: false
     router1.vm.provision "shell", path: "common.sh"
-    router1.vm.provision "shell", path: "router-1.sh"
+    router1.vm.provision "shell", path: "router-1.sh", run: 'always'
     router1.vm.provider "virtualbox" do |vb|
       vb.memory = 256
     end
@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
     router2.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-2", auto_config: false
     router2.vm.network "private_network", virtualbox__intnet: "broadcast_router-inter", auto_config: false
     router2.vm.provision "shell", path: "common.sh"
-    router2.vm.provision "shell", path: "router-2.sh"
+    router2.vm.provision "shell", path: "router-2.sh", run: 'always'
     router2.vm.provider "virtualbox" do |vb|
       vb.memory = 256
     end
@@ -45,7 +45,7 @@ Vagrant.configure("2") do |config|
     switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
     switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
     switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
-    switch.vm.provision "shell", path: "switch.sh"
+    switch.vm.provision "shell", path: "switch.sh", run: 'always'
     #switch.vm.provision "shell", path: ".sh"
     switch.vm.provider "virtualbox" do |vb|
       vb.memory = 256
