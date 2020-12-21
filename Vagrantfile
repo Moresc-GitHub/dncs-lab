@@ -42,8 +42,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "switch" do |switch|
     switch.vm.box = "ubuntu/bionic64"
     switch.vm.hostname = "switch"
-    switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
-    switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
+    switch.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-1", auto_config: false
+    switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_a", auto_config: false
     switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
     switch.vm.provision "shell", path: "switch.sh", run: 'always'
     #switch.vm.provision "shell", path: ".sh"
@@ -54,7 +54,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "host-a" do |hosta|
     hosta.vm.box = "ubuntu/bionic64"
     hosta.vm.hostname = "host-a"
-    hosta.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-1", auto_config: false
+    hosta.vm.network "private_network", virtualbox__intnet: "broadcast_host_a", auto_config: false
     hosta.vm.provision "shell", path: "common.sh"
     hosta.vm.provision "shell", path: "host-a.sh", run: 'always'
     hosta.vm.provider "virtualbox" do |vb|
