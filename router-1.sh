@@ -1,3 +1,5 @@
+ip addr flush dev enp0s8 #evito che in caso di resume ci siano errori RTNETLINK answers: File exists
+ip addr flush dev enp0s9 #evito che in caso di resume ci siano errori RTNETLINK answers: File exists
 #  SET IP
 #  fra i router
 sudo ip a add 10.2.2.1/30 dev enp0s9

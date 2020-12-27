@@ -7,8 +7,12 @@
 # you're doing.
 Vagrant.configure("2") do |config|
   config.vm.box_check_update = false
-  config.vm.boot_timeout=700
+  config.ssh.insert_key = false #agg
+  config.ssh.connect_timeout = 25 #agg, default = 15
+  config.vm.boot_timeout=700  #agg
   config.vm.provider "virtualbox" do |vb|
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]  #agg
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]         #agg
     vb.customize ["modifyvm", :id, "--usb", "on"]
     vb.customize ["modifyvm", :id, "--usbehci", "off"]
     vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
@@ -46,9 +50,9 @@ Vagrant.configure("2") do |config|
     switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_a", auto_config: false
     switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
     switch.vm.provision "shell", path: "switch.sh", run: 'always'
-    #switch.vm.provision "shell", path: ".sh"
+    #switch.vm.provision "shell", path: "Always-switch.sh", run: 'always'
     switch.vm.provider "virtualbox" do |vb|
-      vb.memory = 256
+      vb.memory = 512 #256
     end
   end
   config.vm.define "host-a" do |hosta|
@@ -57,6 +61,7 @@ Vagrant.configure("2") do |config|
     hosta.vm.network "private_network", virtualbox__intnet: "broadcast_host_a", auto_config: false
     hosta.vm.provision "shell", path: "common.sh"
     hosta.vm.provision "shell", path: "host-a.sh", run: 'always'
+    #ovviamente imponendo il routing statico non ci si può più connettere a internet
     hosta.vm.provider "virtualbox" do |vb|
       vb.memory = 256
     end
@@ -78,7 +83,7 @@ Vagrant.configure("2") do |config|
     hostc.vm.provision "shell", path: "common.sh"
     hostc.vm.provision "shell", path: "host-c.sh", run: 'always'
     hostc.vm.provider "virtualbox" do |vb|
-      vb.memory = 256
+      vb.memory = 512 #  era 256
     end
   end
 end
