@@ -2,7 +2,7 @@ ip addr flush dev enp0s8 #evito che in caso di resume ci siano errori RTNETLINK 
 ip addr flush dev enp0s9 #evito che in caso di resume ci siano errori RTNETLINK answers: File exists
 #  SET IP
 #  fra i router
-sudo ip a add 10.2.2.2/30 dev enp0s9
+sudo ip a add 10.2.2.2/30 dev  enp0s9
 sudo ip link set dev enp0s9 up
 #  verso host-c
 sudo ip a add 10.3.0.1/23 dev enp0s8

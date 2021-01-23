@@ -11,8 +11,8 @@ Vagrant.configure("2") do |config|
   config.ssh.connect_timeout = 25 #agg, default = 15
   config.vm.boot_timeout=700  #agg
   config.vm.provider "virtualbox" do |vb|
-    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]  #agg
-    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]         #agg
+   # vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]  #agg
+   # vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]         #agg
     vb.customize ["modifyvm", :id, "--usb", "on"]
     vb.customize ["modifyvm", :id, "--usbehci", "off"]
     vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "router-2" do |router2|
     router2.vm.box = "ubuntu/bionic64"
     router2.vm.hostname = "router-2"
-    router2.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-2", auto_config: false
+    router2.vm.network "private_network", virtualbox__intnet: "Hub", auto_config: false
     router2.vm.network "private_network", virtualbox__intnet: "broadcast_router-inter", auto_config: false
     router2.vm.provision "shell", path: "common.sh"
     router2.vm.provision "shell", path: "router-2.sh", run: 'always'
@@ -47,18 +47,17 @@ Vagrant.configure("2") do |config|
     switch.vm.box = "ubuntu/bionic64"
     switch.vm.hostname = "switch"
     switch.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-1", auto_config: false
-    switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_a", auto_config: false
-    switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
+    switch.vm.network "private_network", virtualbox__intnet: "Hosts-A", auto_config: false
+    switch.vm.network "private_network", virtualbox__intnet: "Hosts-B", auto_config: false
     switch.vm.provision "shell", path: "switch.sh", run: 'always'
-    #switch.vm.provision "shell", path: "Always-switch.sh", run: 'always'
     switch.vm.provider "virtualbox" do |vb|
-      vb.memory = 512 #256
+      vb.memory = 256
     end
   end
   config.vm.define "host-a" do |hosta|
     hosta.vm.box = "ubuntu/bionic64"
     hosta.vm.hostname = "host-a"
-    hosta.vm.network "private_network", virtualbox__intnet: "broadcast_host_a", auto_config: false
+    hosta.vm.network "private_network", virtualbox__intnet: "Hosts-A", auto_config: false
     hosta.vm.provision "shell", path: "common.sh"
     hosta.vm.provision "shell", path: "host-a.sh", run: 'always'
     #ovviamente imponendo il routing statico non ci si può più connettere a internet
@@ -69,7 +68,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "host-b" do |hostb|
     hostb.vm.box = "ubuntu/bionic64"
     hostb.vm.hostname = "host-b"
-    hostb.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
+    hostb.vm.network "private_network", virtualbox__intnet: "Hosts-B", auto_config: false
     hostb.vm.provision "shell", path: "common.sh"
     hostb.vm.provision "shell", path: "host-b.sh", run: 'always'
     hostb.vm.provider "virtualbox" do |vb|
@@ -79,7 +78,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "host-c" do |hostc|
     hostc.vm.box = "ubuntu/bionic64"
     hostc.vm.hostname = "host-c"
-    hostc.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-2", auto_config: false
+    hostc.vm.network "private_network", virtualbox__intnet: "Hub", auto_config: false
     hostc.vm.provision "shell", path: "common.sh"
     hostc.vm.provision "shell", path: "host-c.sh", run: 'always'
     hostc.vm.provider "virtualbox" do |vb|
